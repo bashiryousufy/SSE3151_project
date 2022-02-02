@@ -1,16 +1,23 @@
-# project
+# Project 2: Certinomial 
 
-A new Flutter project.
+Certimonial is cloud-based app to manage the proof of achievements, such as certificates, testimonials, and appointment letters. They are all called documents. The users are allowed to register to use the app. Users shall be able to create different folder to categorize their documents. User can scan a physical document like Camscanner app to the folders. Document can also be shared to other applications (such as social media apps, printer, email) by the users. Any digital format of the document on the phone can also be uploaded to the cloud directly. 
 
-## Getting Started
+Users can also add remarks the documents. Such as the location of the physical documents.
 
-This project is a starting point for a Flutter application.
+The app also allows the document producer to invite and attach the document via email or messenger through an URL. Opening the link will ask the users to confirm to save the attach document to the folder in the app. 
 
-A few resources to get you started if this is your first Flutter project:
+Biometric authentication shall be enabled for all users. Use Google Firebase or AWS amplify wherever possible. 
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## TODO List
+### Sajjad 
+[] Add SSO Facebook and Google Auth (UPM Email Auth)
+[] Authentication with fingerprint and fallback pin
+[] Scan Document From Camera
+[] Upload Document From Device (Library)
+
+### Bashir
+[] Add the extra remarks (Description, Location (Latitude, Longtitude))
+[] Make Folders for each document Category
+[] Upload to cloud
+[] Share Document through URL
