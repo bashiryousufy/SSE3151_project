@@ -18,6 +18,6 @@ Biometric authentication shall be enabled for all users. Use Google Firebase or 
 
 ### Bashir
 [] Add the extra remarks (Description, Location (Latitude, Longtitude)) <br>
-[] Make Folders for each document Category <br>
+[X] Make Folders for each document Category <br>
 [] Upload to cloud <br>
 [] Share Document through URL <br>

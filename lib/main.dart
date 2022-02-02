@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project/Screens/auth_screen.dart';
+import 'package:project/Screens/folders_screen.dart';
 
 void main(List<String> args) {
   runApp(MyApp());
@@ -16,7 +17,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: AuthenticateScreen(),
+      home: FolderScreen(),
     );
   }
 }
