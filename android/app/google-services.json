@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "912224685971",
+    "project_id": "document-auth-project",
+    "storage_bucket": "document-auth-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:912224685971:android:0baf6cb1cc42baec7de266",
+        "android_client_info": {
+          "package_name": "com.bashiryousufy.documentAuthProject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "912224685971-316ha3c8oo4i8uierfspmi5h2m631us7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBhI84vOaJhR4Ouwp2HB7fVEcCvGe8N5M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "912224685971-316ha3c8oo4i8uierfspmi5h2m631us7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
