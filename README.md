@@ -12,7 +12,7 @@ Biometric authentication shall be enabled for all users. Use Google Firebase or 
 ## TODO List
 ### Sajjad 
 [] Add SSO Facebook and Google Auth (UPM Email Auth) <br>
-[] Authentication with fingerprint and fallback pin <br>
+[X] Authentication with fingerprint and fallback pin <br>
 [] Scan Document From Camera <br>
 [] Upload Document From Device (Library) <br>
 
