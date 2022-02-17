@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
 
 class PhotoDescScreen extends StatefulWidget {
   const PhotoDescScreen({Key? key}) : super(key: key);
@@ -16,6 +19,7 @@ class PhotoDescScreen extends StatefulWidget {
 
 class _PhotoDescScreenState extends State<PhotoDescScreen> {
   File? image;
+  final pdf = pw.Document();
   String? imageUrl;
   final _formKey = GlobalKey<FormState>();
 
@@ -27,32 +31,32 @@ class _PhotoDescScreenState extends State<PhotoDescScreen> {
   DateTime selectedDate = DateTime.now();
 
   //firebase collection reference
-  final CollectionReference _photos =
-      FirebaseFirestore.instance.collection('photos');
+  // final CollectionReference _photos =
+  //     FirebaseFirestore.instance.collection('photos');
 
-  uploadImagetFirebase(String imagePath) async {
-    await FirebaseStorage.instance
-        .ref(imagePath)
-        .putFile(File(imagePath))
-        .then((taskSnapshot) async {
-      print("task done");
+  // uploadImagetFirebase(String imagePath) async {
+  //   await FirebaseStorage.instance
+  //       .ref(imagePath)
+  //       .putFile(File(imagePath))
+  //       .then((taskSnapshot) async {
+  //     print("task done");
 
-      // download url when it is uploaded
-      if (taskSnapshot.state == TaskState.success) {
-        await FirebaseStorage.instance
-            .ref(imagePath)
-            .getDownloadURL()
-            .then((url) {
-          print("Here is the URL of Image $url");
-          setState(() {
-            imageUrl = url;
-          });
-        }).catchError((onError) {
-          print("Got Error $onError");
-        });
-      }
-    });
-  }
+  //     // download url when it is uploaded
+  //     if (taskSnapshot.state == TaskState.success) {
+  //       await FirebaseStorage.instance
+  //           .ref(imagePath)
+  //           .getDownloadURL()
+  //           .then((url) {
+  //         print("Here is the URL of Image $url");
+  //         setState(() {
+  //           imageUrl = url;
+  //         });
+  //       }).catchError((onError) {
+  //         print("Got Error $onError");
+  //       });
+  //     }
+  //   });
+  // }
 
   //location lat and long
   String _locationLat = "";
@@ -65,7 +69,7 @@ class _PhotoDescScreenState extends State<PhotoDescScreen> {
       if (image == null) return;
 
       final tempImage = File(image.path);
-      uploadImagetFirebase(tempImage.path);
+      //uploadImagetFirebase(tempImage.path);
 
       setState(() {
         this.image = tempImage;
@@ -97,6 +101,28 @@ class _PhotoDescScreenState extends State<PhotoDescScreen> {
       _locationLat = '${postion.latitude}';
       _locationLong = '${postion.longitude}';
     });
+  }
+
+  createPDF() async {
+    final pdfimage = pw.MemoryImage(
+      File(image!.path).readAsBytesSync(),
+    );
+
+    pdf.addPage(pw.Page(
+        pageFormat: PdfPageFormat.a4,
+        build: (pw.Context context) {
+          return pw.Center(
+            child: pw.Image(pdfimage),
+          );
+        }));
+  }
+
+  savePDF(String filename) async {
+    try {
+      final dir = await getApplicationDocumentsDirectory();
+      final file = File('${dir.path}/$filename');
+      await file.writeAsBytes(await pdf.save());
+    } catch (e) {}
   }
 
   @override
@@ -197,14 +223,16 @@ class _PhotoDescScreenState extends State<PhotoDescScreen> {
                         ),
                         ElevatedButton(
                           onPressed: () async {
-                            await _photos.add({
-                              'description': _descController.text,
-                              'collection': _folderController.text,
-                              'date_time': selectedDate,
-                              'latitude': _locationLat,
-                              'longtitude': _locationLong,
-                              'img_url': imageUrl.toString(),
-                            });
+                            createPDF();
+                            savePDF('temp.pdf');
+                            // await _photos.add({
+                            //   'description': _descController.text,
+                            //   'collection': _folderController.text,
+                            //   'date_time': selectedDate,
+                            //   'latitude': _locationLat,
+                            //   'longtitude': _locationLong,
+                            //   'img_url': imageUrl.toString(),
+                            // });
                             dialogMessage(
                                 context, 'Image uploaded Successfully!');
                           },
@@ -243,8 +271,9 @@ class _PhotoDescScreenState extends State<PhotoDescScreen> {
             contentPadding: EdgeInsets.all(25),
             actions: [
               TextButton(
-                onPressed: () => Navigator.popUntil(
-                    context, (route) => route.settings.name == '/dashboard'),
+                // onPressed: () => Navigator.popUntil(
+                //     context, (route) => route.settings.name == '/folder'),
+                onPressed: () => Navigator.popAndPushNamed(context, '/folder'),
                 child: Text('Ok'),
               ),
             ],

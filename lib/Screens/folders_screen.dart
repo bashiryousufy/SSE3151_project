@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:project/Screens/inner_folder_screen.dart';
+import 'package:project/Screens/pdf_view_screen.dart';
 import 'package:project/Screens/photo_desc_screen.dart';
 
 class FolderScreen extends StatefulWidget {
@@ -200,12 +201,17 @@ class _FolderScreenState extends State<FolderScreen> {
                             if (snapshot.hasData) {
                               FileStat? f = snapshot.data as FileStat?;
                               print("file.stat() ${f!.type}");
-                              ;
+
                               if (f.type.toString().contains("file")) {
-                                return Icon(
-                                  Icons.file_copy_outlined,
-                                  size: 100,
-                                  color: Colors.orange,
+                                return InkWell(
+                                  onTap: () {
+                                    File file = File(_folders[index].path);
+                                  },
+                                  child: Icon(
+                                    Icons.file_copy_outlined,
+                                    size: 100,
+                                    color: Colors.orange,
+                                  ),
                                 );
                               } else {
                                 return InkWell(
@@ -236,7 +242,7 @@ class _FolderScreenState extends State<FolderScreen> {
                               }
                             }
                             return Icon(
-                              Icons.file_copy_outlined,
+                              Icons.file_copy,
                               size: 100,
                               color: Colors.orange,
                             );
@@ -259,7 +265,20 @@ class _FolderScreenState extends State<FolderScreen> {
                       color: Colors.grey,
                     ),
                   ),
-                )
+                ),
+                Positioned(
+                  top: 60,
+                  right: 10,
+                  child: GestureDetector(
+                    onTap: () async {
+                      //TODO: Implement share pdf
+                    },
+                    child: Icon(
+                      Icons.share,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
               ],
             ),
           );
