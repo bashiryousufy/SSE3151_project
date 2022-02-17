@@ -206,6 +206,13 @@ class _FolderScreenState extends State<FolderScreen> {
                                 return InkWell(
                                   onTap: () {
                                     File file = File(_folders[index].path);
+
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => PDFViewerPage(
+                                                  file: file,
+                                                )));
                                   },
                                   child: Icon(
                                     Icons.file_copy_outlined,
