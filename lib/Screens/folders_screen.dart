@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:project/Screens/inner_folder_screen.dart';
+import 'package:project/Screens/photo_desc_screen.dart';
 
 class FolderScreen extends StatefulWidget {
   const FolderScreen({Key? key}) : super(key: key);
@@ -164,14 +165,12 @@ class _FolderScreenState extends State<FolderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Folder Info"),
+        title: Text("All Documents"),
         actions: [
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () {
-              _showMyDialog();
-            },
-          ),
+          ElevatedButton.icon(
+              onPressed: () => _showMyDialog(),
+              icon: Icon(Icons.add),
+              label: Text('Add Folder')),
         ],
       ),
       body: GridView.builder(
@@ -266,6 +265,16 @@ class _FolderScreenState extends State<FolderScreen> {
           );
         },
         itemCount: _folders.length,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showModalBottomSheet(
+              context: context,
+              builder: (context) {
+                return PhotoDescScreen();
+              });
+        },
+        child: Icon(Icons.camera),
       ),
     );
   }

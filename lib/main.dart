@@ -20,7 +20,14 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: AuthenticateScreen(),
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.green,
+      ),
+      routes: {
+        '/': (context) => AuthenticateScreen(),
+        '/folder': (context) => FolderScreen(),
+      },
     );
   }
 }

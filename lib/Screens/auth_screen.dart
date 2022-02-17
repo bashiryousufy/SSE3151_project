@@ -14,10 +14,8 @@ class AuthenticateScreen extends StatelessWidget {
         bool authenticated = await localAuth.authenticate(
             stickyAuth: true,
             localizedReason: "Authenticate to get access to your documents");
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => FolderScreen()),
-        );
+
+        Navigator.popAndPushNamed(context, '/folder');
       }
     } catch (e) {
       print(e.toString());

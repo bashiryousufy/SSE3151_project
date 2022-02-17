@@ -31,6 +31,8 @@ dependencies:
     sdk: flutter
   path_provider: ^2.0.8
   local_auth: ^1.1.10
+  image_picker: ^0.8.4+9
+  geolocator: ^8.0.1
 
   #firebase dependencies
   firebase_core: ^1.12.0
