@@ -1,7 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:local_auth/local_auth.dart';
+import 'package:project/Screens/folders_screen.dart';
 
 class AuthenticateScreen extends StatelessWidget {
-  const AuthenticateScreen({Key? key}) : super(key: key);
+  AuthenticateScreen({Key? key}) : super(key: key);
+
+  final LocalAuthentication localAuth = LocalAuthentication();
+
+  void authenticateByBiometrics(BuildContext context) async {
+    try {
+      bool weCanCheckBiometrics = await localAuth.canCheckBiometrics;
+      if (weCanCheckBiometrics) {
+        bool authenticated = await localAuth.authenticate(
+            stickyAuth: true,
+            localizedReason: "Authenticate to get access to your documents");
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => FolderScreen()),
+        );
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +47,9 @@ class AuthenticateScreen extends StatelessWidget {
                 padding: EdgeInsets.all(24),
                 primary: Colors.green,
               ),
-              onPressed: () {},
+              onPressed: () async {
+                authenticateByBiometrics(context);
+              },
               child: Image.asset(
                 "assets/fingerprint.png",
                 width: 100,
