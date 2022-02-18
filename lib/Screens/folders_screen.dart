@@ -6,6 +6,7 @@ import 'package:project/Screens/inner_folder_screen.dart';
 import 'package:project/Screens/pdf_view_screen.dart';
 import 'package:project/Screens/document_details_screen.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:project/Screens/signin.dart';
 
 class FolderScreen extends StatefulWidget {
   const FolderScreen({Key? key}) : super(key: key);
@@ -65,7 +66,9 @@ class _FolderScreenState extends State<FolderScreen> {
               return TextField(
                 controller: folderController,
                 autofocus: true,
-                decoration: InputDecoration(hintText: 'Enter folder name'),
+                decoration: InputDecoration(
+                  hintText: "Enter folder name",
+                ),
                 onChanged: (val) {
                   setState(() {
                     nameOfFolder = folderController.text;
@@ -188,9 +191,16 @@ class _FolderScreenState extends State<FolderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: TextButton(
-          onPressed: () {},
-          child: Text("Login"),
+        leading: IconButton(
+          icon: Icon(Icons.person),
+          color: Colors.black,
+          onPressed: () {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SignInScreen(),
+                ));
+          },
         ),
         title: Text("My Documents"),
         centerTitle: true,
