@@ -256,8 +256,7 @@ class _FolderScreenState extends State<FolderScreen> {
                                 return InkWell(
                                   onTap: () {
                                     Navigator.push(context,
-                                        new MaterialPageRoute(
-                                            builder: (builder) {
+                                        MaterialPageRoute(builder: (builder) {
                                       return InnerFolder(
                                           filespath: _folders[index].path);
                                     }));
