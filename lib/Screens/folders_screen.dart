@@ -5,6 +5,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:project/Screens/inner_folder_screen.dart';
 import 'package:project/Screens/pdf_view_screen.dart';
 import 'package:project/Screens/document_details_screen.dart';
+import 'package:share_plus/share_plus.dart';
 
 class FolderScreen extends StatefulWidget {
   const FolderScreen({Key? key}) : super(key: key);
@@ -284,7 +285,9 @@ class _FolderScreenState extends State<FolderScreen> {
                   right: 10,
                   child: GestureDetector(
                     onTap: () async {
-                      //TODO: Implement share pdf
+                      await Share.shareFiles(
+                        [_folders[index].path],
+                      );
                     },
                     child: Icon(
                       Icons.share,
