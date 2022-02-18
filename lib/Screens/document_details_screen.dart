@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,14 +11,14 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
-class PhotoDescScreen extends StatefulWidget {
-  const PhotoDescScreen({Key? key}) : super(key: key);
+class DocumentDetailsScreen extends StatefulWidget {
+  const DocumentDetailsScreen({Key? key}) : super(key: key);
 
   @override
-  State<PhotoDescScreen> createState() => _PhotoDescScreenState();
+  State<DocumentDetailsScreen> createState() => _DocumentDetailsScreenState();
 }
 
-class _PhotoDescScreenState extends State<PhotoDescScreen> {
+class _DocumentDetailsScreenState extends State<DocumentDetailsScreen> {
   File? image;
   final pdf = pw.Document();
   String? imageUrl;
@@ -62,7 +63,8 @@ class _PhotoDescScreenState extends State<PhotoDescScreen> {
   String _locationLat = "";
   String _locationLong = "";
 
-  Future pickImage(ImageSource source) async {
+  // To scan document from camera
+  Future scanDocumentFromCamera(ImageSource source) async {
     try {
       final image = await ImagePicker().pickImage(source: source);
 
@@ -76,6 +78,16 @@ class _PhotoDescScreenState extends State<PhotoDescScreen> {
       });
     } on PlatformException catch (e) {
       print('Failed to pick image $e');
+    }
+  }
+
+  // To upload document from storage
+  Future uploadDocumentFromStorage() async {
+    FilePickerResult? result = await FilePicker.platform
+        .pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
+
+    if (result != null) {
+      File file = File(result.files.single.path!);
     }
   }
 
@@ -163,10 +175,10 @@ class _PhotoDescScreenState extends State<PhotoDescScreen> {
                       showModalBottomSheet(
                           context: context,
                           builder: (BuildContext context) {
-                            return image_picker_options();
+                            return document_picker_options();
                           });
                     },
-                    child: Icon(Icons.photo_camera),
+                    child: Icon(Icons.file_upload_outlined),
                   ),
                 ],
               ),
@@ -271,8 +283,6 @@ class _PhotoDescScreenState extends State<PhotoDescScreen> {
             contentPadding: EdgeInsets.all(25),
             actions: [
               TextButton(
-                // onPressed: () => Navigator.popUntil(
-                //     context, (route) => route.settings.name == '/folder'),
                 onPressed: () => Navigator.popAndPushNamed(context, '/folder'),
                 child: Text('Ok'),
               ),
@@ -281,19 +291,19 @@ class _PhotoDescScreenState extends State<PhotoDescScreen> {
         });
   }
 
-  Widget image_picker_options() {
+  Widget document_picker_options() {
     return SafeArea(
       child: Container(
         height: 120,
         child: Column(
           children: [
             TextButton(
-              onPressed: () => pickImage(ImageSource.gallery),
-              child: Text('Add image from gallery'),
+              onPressed: () => uploadDocumentFromStorage(),
+              child: Text('Add Document from Storage'),
             ),
             TextButton(
-              onPressed: () => pickImage(ImageSource.camera),
-              child: Text('Add image from Camera'),
+              onPressed: () => scanDocumentFromCamera(ImageSource.camera),
+              child: Text('Scan Document from Camera'),
             )
           ],
         ),

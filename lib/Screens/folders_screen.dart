@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:project/Screens/inner_folder_screen.dart';
 import 'package:project/Screens/pdf_view_screen.dart';
-import 'package:project/Screens/photo_desc_screen.dart';
+import 'package:project/Screens/document_details_screen.dart';
 
 class FolderScreen extends StatefulWidget {
   const FolderScreen({Key? key}) : super(key: key);
@@ -42,6 +42,7 @@ class _FolderScreenState extends State<FolderScreen> {
 
   final folderController = TextEditingController();
   late String nameOfFolder;
+
   Future<void> _showMyDialog() async {
     return showDialog<void>(
       context: context,
@@ -51,15 +52,9 @@ class _FolderScreenState extends State<FolderScreen> {
           title: Column(
             children: [
               Text(
-                'ADD FOLDER',
+                'Add Folder',
                 textAlign: TextAlign.left,
               ),
-              Text(
-                'Type a folder name to add',
-                style: TextStyle(
-                  fontSize: 14,
-                ),
-              )
             ],
           ),
           content: StatefulBuilder(
@@ -78,8 +73,8 @@ class _FolderScreenState extends State<FolderScreen> {
             },
           ),
           actions: <Widget>[
-            FlatButton(
-              color: Colors.blue,
+            TextButton(
+              style: TextButton.styleFrom(backgroundColor: Colors.lightGreen),
               child: Text(
                 'Add',
                 style: TextStyle(color: Colors.white),
@@ -96,10 +91,10 @@ class _FolderScreenState extends State<FolderScreen> {
                 }
               },
             ),
-            FlatButton(
-              color: Colors.redAccent,
+            TextButton(
+              style: TextButton.styleFrom(backgroundColor: Colors.redAccent),
               child: Text(
-                'No',
+                'Cancel',
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () {
@@ -113,6 +108,7 @@ class _FolderScreenState extends State<FolderScreen> {
   }
 
   late List<FileSystemEntity> _folders;
+
   Future<void> getDir() async {
     final directory = await getApplicationDocumentsDirectory();
     final dir = directory.path;
@@ -132,21 +128,32 @@ class _FolderScreenState extends State<FolderScreen> {
         return AlertDialog(
           title: Text(
             'Are you sure to delete this folder?',
+            textAlign: TextAlign.center,
           ),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('Yes'),
-              onPressed: () async {
-                await _folders[index].delete();
-                getDir();
-                Navigator.of(context).pop();
-              },
-            ),
-            FlatButton(
-              child: Text('No'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                TextButton(
+                  style: TextButton.styleFrom(
+                      primary: Colors.white,
+                      backgroundColor: Colors.lightGreen),
+                  child: Text('Yes'),
+                  onPressed: () async {
+                    await _folders[index].delete();
+                    getDir();
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  style: TextButton.styleFrom(
+                      primary: Colors.white, backgroundColor: Colors.redAccent),
+                  child: Text('No'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
             ),
           ],
         );
@@ -166,7 +173,7 @@ class _FolderScreenState extends State<FolderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("All Documents"),
+        title: Text("My Documents"),
         actions: [
           ElevatedButton.icon(
               onPressed: () => _showMyDialog(),
@@ -296,10 +303,10 @@ class _FolderScreenState extends State<FolderScreen> {
           showModalBottomSheet(
               context: context,
               builder: (context) {
-                return PhotoDescScreen();
+                return DocumentDetailsScreen();
               });
         },
-        child: Icon(Icons.camera),
+        child: Icon(Icons.file_present),
       ),
     );
   }

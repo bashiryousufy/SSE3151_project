@@ -5,6 +5,7 @@ import 'package:path_provider/path_provider.dart';
 
 class InnerFolder extends StatefulWidget {
   InnerFolder({required this.filespath});
+
   final String filespath;
 
   @override
@@ -15,6 +16,7 @@ class InnerFolder extends StatefulWidget {
 
 class InnerFolderState extends State<InnerFolder> {
   String get fileStr => widget.filespath;
+
   Future<String> createFolderInAppDocDir(String folderName) async {
     //Get this App Document Directory
 
@@ -53,15 +55,9 @@ class InnerFolderState extends State<InnerFolder> {
           title: Column(
             children: [
               Text(
-                'ADD FOLDER',
+                'Add Folder',
                 textAlign: TextAlign.left,
               ),
-              Text(
-                'Type a folder name to add',
-                style: TextStyle(
-                  fontSize: 14,
-                ),
-              )
             ],
           ),
           content: StatefulBuilder(
@@ -69,7 +65,7 @@ class InnerFolderState extends State<InnerFolder> {
               return TextField(
                 controller: folderController,
                 autofocus: true,
-                decoration: InputDecoration(hintText: 'Enter folder name'),
+                decoration: InputDecoration(hintText: 'Enter the folder name'),
                 onChanged: (val) {
                   setState(() {
                     nameOfFolder = folderController.text;
@@ -80,8 +76,8 @@ class InnerFolderState extends State<InnerFolder> {
             },
           ),
           actions: <Widget>[
-            FlatButton(
-              color: Colors.blue,
+            TextButton(
+              style: TextButton.styleFrom(backgroundColor: Colors.lightGreen),
               child: Text(
                 'Add',
                 style: TextStyle(color: Colors.white),
@@ -98,10 +94,10 @@ class InnerFolderState extends State<InnerFolder> {
                 }
               },
             ),
-            FlatButton(
-              color: Colors.redAccent,
+            TextButton(
+              style: TextButton.styleFrom(backgroundColor: Colors.redAccent),
               child: Text(
-                'No',
+                'Cancel',
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () {
@@ -115,6 +111,7 @@ class InnerFolderState extends State<InnerFolder> {
   }
 
   late List<FileSystemEntity> _folders;
+
   Future<void> getDir() async {
     /* final directory = await getApplicationDocumentsDirectory();
     final dir = directory.path;
