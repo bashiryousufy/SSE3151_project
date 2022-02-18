@@ -6,7 +6,9 @@ import 'package:firebase_core/firebase_core.dart';
 
 class FirebaseService {
   //upload files to firebase storage
-  uploadImagetFirebase(String imagePath, String filename) async {
+  Future<String?> uploadImagetFirebase(
+      String imagePath, String filename) async {
+    String _imgurl = "";
     await FirebaseStorage.instance
         .ref(filename)
         .putFile(File(imagePath))
@@ -16,16 +18,18 @@ class FirebaseService {
       // download url when it is uploaded
       if (taskSnapshot.state == TaskState.success) {
         await FirebaseStorage.instance
-            .ref(imagePath)
+            .ref(filename)
             .getDownloadURL()
             .then((url) {
           print("Here is the URL of Image $url");
-          return url;
+          _imgurl = url;
         }).catchError((onError) {
           print("Got Error $onError");
         });
       }
     });
+
+    return _imgurl;
   }
 
   uploadDocumentDetailsToFirebase(docData) async {

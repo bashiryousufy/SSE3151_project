@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:project/Screens/document_details_screen.dart';
 
 class InnerFolder extends StatefulWidget {
   InnerFolder({required this.filespath});
@@ -293,6 +294,22 @@ class InnerFolderState extends State<InnerFolder> {
           );
         },
         itemCount: _folders.length,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showModalBottomSheet(
+              isScrollControlled: true,
+              context: context,
+              builder: (context) {
+                return DocumentDetailsScreen(
+                  folderPath: widget.filespath,
+                );
+              });
+        },
+        child: Icon(
+          Icons.file_present,
+          color: Colors.black,
+        ),
       ),
     );
   }

@@ -11,9 +11,14 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:project/Controllers/firebase_controller.dart';
+import 'package:simpleprogressdialog/builders/cupertino_dialog_builder.dart';
+import 'package:simpleprogressdialog/builders/material_dialog_builder.dart';
+import 'package:simpleprogressdialog/simpleprogressdialog.dart';
 
 class DocumentDetailsScreen extends StatefulWidget {
-  const DocumentDetailsScreen({Key? key}) : super(key: key);
+  final String folderPath;
+  const DocumentDetailsScreen({Key? key, required this.folderPath})
+      : super(key: key);
 
   @override
   State<DocumentDetailsScreen> createState() => _DocumentDetailsScreenState();
@@ -110,7 +115,16 @@ class _DocumentDetailsScreenState extends State<DocumentDetailsScreen> {
   savePDF(String filename) async {
     try {
       final dir = await getApplicationDocumentsDirectory();
-      final file = File('${dir.path}/$filename.pdf');
+      String path;
+      if (widget.folderPath.isNotEmpty) {
+        path = widget.folderPath;
+      } else {
+        path = dir.path;
+      }
+
+      print('path is : $path');
+
+      final file = File('$path/$filename.pdf');
       await file.writeAsBytes(await pdf.save());
       print('pdf path: ${file.path}');
       setState(() {
@@ -124,11 +138,17 @@ class _DocumentDetailsScreenState extends State<DocumentDetailsScreen> {
   @override
   void dispose() {
     _descController.dispose();
+    _filenameController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    ProgressDialog dialog = ProgressDialog(
+      barrierDismissible: false,
+      elevation: 10.0,
+      context: context,
+    );
     return Container(
       child: SingleChildScrollView(
         child: Padding(
@@ -242,8 +262,10 @@ class _DocumentDetailsScreenState extends State<DocumentDetailsScreen> {
                         onPressed: () async {
                           createPDF();
                           await savePDF(_filenameController.text);
-
-                          String imgurl =
+                          dialog.showMaterial(
+                              layout: MaterialProgressDialogLayout
+                                  .overlayCircularProgressIndicator);
+                          String? imgurl =
                               await _firebaseService.uploadImagetFirebase(
                                   pathOfCreatedPDF!, _filenameController.text);
                           await _firebaseService
@@ -255,6 +277,7 @@ class _DocumentDetailsScreenState extends State<DocumentDetailsScreen> {
                             'long': _locationLong,
                             'imgurl': imgurl.toString()
                           });
+                          dialog.dismiss();
 
                           _ShowUploadCompleteMessage(
                               context, 'Document uploaded Successfully!');

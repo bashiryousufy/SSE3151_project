@@ -342,7 +342,9 @@ class _FolderScreenState extends State<FolderScreen> {
               isScrollControlled: true,
               context: context,
               builder: (context) {
-                return DocumentDetailsScreen();
+                return DocumentDetailsScreen(
+                  folderPath: "",
+                );
               });
         },
         child: Icon(
