@@ -15,6 +15,10 @@ class FolderScreen extends StatefulWidget {
 }
 
 class _FolderScreenState extends State<FolderScreen> {
+  final folderController = TextEditingController();
+  late String nameOfFolder;
+  late List<FileSystemEntity> _folders;
+
   Future<String> createFolderInAppDocDir(String folderName) async {
     //Get this App Document Directory
 
@@ -41,10 +45,8 @@ class _FolderScreenState extends State<FolderScreen> {
     setState(() {});
   }
 
-  final folderController = TextEditingController();
-  late String nameOfFolder;
-
-  Future<void> _showMyDialog() async {
+  // Show the add folder dialog box
+  Future<void> _showAddFolderDialog() async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -73,34 +75,44 @@ class _FolderScreenState extends State<FolderScreen> {
               );
             },
           ),
-          actions: <Widget>[
-            TextButton(
-              style: TextButton.styleFrom(backgroundColor: Colors.lightGreen),
-              child: Text(
-                'Add',
-                style: TextStyle(color: Colors.white),
-              ),
-              onPressed: () async {
-                if (nameOfFolder != null) {
-                  await callFolderCreationMethod(nameOfFolder);
-                  getDir();
-                  setState(() {
-                    folderController.clear();
-                    nameOfFolder = "";
-                  });
-                  Navigator.of(context).pop();
-                }
-              },
-            ),
-            TextButton(
-              style: TextButton.styleFrom(backgroundColor: Colors.redAccent),
-              child: Text(
-                'Cancel',
-                style: TextStyle(color: Colors.white),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                TextButton(
+                  style:
+                      TextButton.styleFrom(backgroundColor: Colors.lightGreen),
+                  child: Text(
+                    'Add',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onPressed: () async {
+                    if (nameOfFolder != null) {
+                      await callFolderCreationMethod(nameOfFolder);
+                      getDir();
+                      setState(() {
+                        folderController.clear();
+                        nameOfFolder = "";
+                      });
+                      Navigator.of(context).pop();
+                    }
+                  },
+                ),
+                SizedBox(
+                  width: 15,
+                ),
+                TextButton(
+                  style:
+                      TextButton.styleFrom(backgroundColor: Colors.redAccent),
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
             ),
           ],
         );
@@ -108,19 +120,7 @@ class _FolderScreenState extends State<FolderScreen> {
     );
   }
 
-  late List<FileSystemEntity> _folders;
-
-  Future<void> getDir() async {
-    final directory = await getApplicationDocumentsDirectory();
-    final dir = directory.path;
-    String pdfDirectory = '$dir/';
-    final myDir = new Directory(pdfDirectory);
-    setState(() {
-      _folders = myDir.listSync(recursive: true, followLinks: false);
-    });
-    print(_folders);
-  }
-
+  // Show the delete folder dialog box
   Future<void> _showDeleteDialog(int index) async {
     return showDialog<void>(
       context: context,
@@ -146,10 +146,13 @@ class _FolderScreenState extends State<FolderScreen> {
                     Navigator.of(context).pop();
                   },
                 ),
+                SizedBox(
+                  width: 15,
+                ),
                 TextButton(
                   style: TextButton.styleFrom(
                       primary: Colors.white, backgroundColor: Colors.redAccent),
-                  child: Text('No'),
+                  child: Text('Cancel'),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
@@ -160,6 +163,17 @@ class _FolderScreenState extends State<FolderScreen> {
         );
       },
     );
+  }
+
+  Future<void> getDir() async {
+    final directory = await getApplicationDocumentsDirectory();
+    final dir = directory.path;
+    String pdfDirectory = '$dir/';
+    final myDir = new Directory(pdfDirectory);
+    setState(() {
+      _folders = myDir.listSync(recursive: true, followLinks: false);
+    });
+    print(_folders);
   }
 
   @override
@@ -174,13 +188,24 @@ class _FolderScreenState extends State<FolderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: TextButton(
+          onPressed: () {},
+          child: Text("Login"),
+        ),
         title: Text("My Documents"),
-        actions: [
-          ElevatedButton.icon(
-              onPressed: () => _showMyDialog(),
-              icon: Icon(Icons.add),
-              label: Text('Add Folder')),
+        centerTitle: true,
+        actions: <Widget>[
+          IconButton(
+            onPressed: () => _showAddFolderDialog(),
+            icon: Icon(Icons.create_new_folder_rounded),
+            color: Colors.black,
+          ),
         ],
+        titleTextStyle: TextStyle(
+          color: Colors.black,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
       ),
       body: GridView.builder(
         padding: EdgeInsets.symmetric(
@@ -309,7 +334,10 @@ class _FolderScreenState extends State<FolderScreen> {
                 return DocumentDetailsScreen();
               });
         },
-        child: Icon(Icons.file_present),
+        child: Icon(
+          Icons.file_present,
+          color: Colors.black,
+        ),
       ),
     );
   }
