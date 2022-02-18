@@ -17,7 +17,7 @@ Biometric authentication shall be enabled for all users. Use Google Firebase or 
 [X] Upload Document From Device (Library) <br>
 
 ### Bashir
-[] Add the extra remarks (Description, Location (Latitude, Longtitude)) <br>
+[X] Add the extra remarks (Description, Location (Latitude, Longtitude)) <br>
 [X] Make Folders for each document Category <br>
-[] Upload to cloud <br>
+[X] Upload to cloud <br>
 [] Share Document through URL <br>
