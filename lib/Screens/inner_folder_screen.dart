@@ -17,6 +17,10 @@ class InnerFolder extends StatefulWidget {
 class InnerFolderState extends State<InnerFolder> {
   String get fileStr => widget.filespath;
 
+  final folderController = TextEditingController();
+  late String nameOfFolder;
+  late List<FileSystemEntity> _folders;
+
   Future<String> createFolderInAppDocDir(String folderName) async {
     //Get this App Document Directory
 
@@ -43,10 +47,8 @@ class InnerFolderState extends State<InnerFolder> {
     setState(() {});
   }
 
-  final folderController = TextEditingController();
-  late String nameOfFolder;
-
-  Future<void> _showMyDialog() async {
+  // Show the add folder dialog box
+  Future<void> _showAddFolderDialog() async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -65,7 +67,7 @@ class InnerFolderState extends State<InnerFolder> {
               return TextField(
                 controller: folderController,
                 autofocus: true,
-                decoration: InputDecoration(hintText: 'Enter the folder name'),
+                decoration: InputDecoration(hintText: 'Enter folder name'),
                 onChanged: (val) {
                   setState(() {
                     nameOfFolder = folderController.text;
@@ -75,34 +77,44 @@ class InnerFolderState extends State<InnerFolder> {
               );
             },
           ),
-          actions: <Widget>[
-            TextButton(
-              style: TextButton.styleFrom(backgroundColor: Colors.lightGreen),
-              child: Text(
-                'Add',
-                style: TextStyle(color: Colors.white),
-              ),
-              onPressed: () async {
-                if (nameOfFolder != null) {
-                  await callFolderCreationMethod(nameOfFolder);
-                  getDir();
-                  setState(() {
-                    folderController.clear();
-                    nameOfFolder = "";
-                  });
-                  Navigator.of(context).pop();
-                }
-              },
-            ),
-            TextButton(
-              style: TextButton.styleFrom(backgroundColor: Colors.redAccent),
-              child: Text(
-                'Cancel',
-                style: TextStyle(color: Colors.white),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                TextButton(
+                  style:
+                      TextButton.styleFrom(backgroundColor: Colors.lightGreen),
+                  child: Text(
+                    'Add',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onPressed: () async {
+                    if (nameOfFolder != null) {
+                      await callFolderCreationMethod(nameOfFolder);
+                      getDir();
+                      setState(() {
+                        folderController.clear();
+                        nameOfFolder = "";
+                      });
+                      Navigator.of(context).pop();
+                    }
+                  },
+                ),
+                SizedBox(
+                  width: 15,
+                ),
+                TextButton(
+                  style:
+                      TextButton.styleFrom(backgroundColor: Colors.redAccent),
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
             ),
           ],
         );
@@ -110,7 +122,50 @@ class InnerFolderState extends State<InnerFolder> {
     );
   }
 
-  late List<FileSystemEntity> _folders;
+  // Show the delete folder dialog box
+  Future<void> _showDeleteDialog(int index) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Are you sure to delete this folder?',
+            textAlign: TextAlign.center,
+          ),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                TextButton(
+                  style: TextButton.styleFrom(
+                      primary: Colors.white,
+                      backgroundColor: Colors.lightGreen),
+                  child: Text('Yes'),
+                  onPressed: () async {
+                    await _folders[index].delete();
+                    getDir();
+                    Navigator.of(context).pop();
+                  },
+                ),
+                SizedBox(
+                  width: 15,
+                ),
+                TextButton(
+                  style: TextButton.styleFrom(
+                      primary: Colors.white, backgroundColor: Colors.redAccent),
+                  child: Text('Cancel'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   Future<void> getDir() async {
     /* final directory = await getApplicationDocumentsDirectory();
@@ -128,36 +183,6 @@ class InnerFolderState extends State<InnerFolder> {
     print(_folders);
   }
 
-  Future<void> _showDeleteDialog(int index) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(
-            'Are you sure to delete this folder?',
-          ),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('Yes'),
-              onPressed: () async {
-                await _folders[index].delete();
-                getDir();
-                Navigator.of(context).pop();
-              },
-            ),
-            FlatButton(
-              child: Text('No'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   void initState() {
     _folders = [];
@@ -171,9 +196,10 @@ class InnerFolderState extends State<InnerFolder> {
       appBar: AppBar(
         actions: [
           IconButton(
-            icon: Icon(Icons.add),
+            icon: Icon(Icons.create_new_folder_rounded),
+            color: Colors.black,
             onPressed: () {
-              _showMyDialog();
+              _showAddFolderDialog();
             },
           ),
         ],

@@ -154,13 +154,14 @@ class _DocumentDetailsScreenState extends State<DocumentDetailsScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                "Enter Doc Details",
-                style: TextStyle(fontSize: 25),
+                "Enter Document Details",
+                style: TextStyle(fontSize: 20),
               ),
               Divider(),
+              SizedBox(height: 10),
               Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.values[5],
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   image != null
                       ? Image.file(
@@ -169,7 +170,11 @@ class _DocumentDetailsScreenState extends State<DocumentDetailsScreen> {
                           height: 160,
                           fit: BoxFit.cover,
                         )
-                      : FlutterLogo(),
+                      : Placeholder(
+                          fallbackHeight: 75,
+                          fallbackWidth: 75,
+                        ),
+                  SizedBox(width: 15),
                   TextButton(
                     onPressed: () {
                       showModalBottomSheet(
@@ -186,72 +191,73 @@ class _DocumentDetailsScreenState extends State<DocumentDetailsScreen> {
                 height: 20,
               ),
               Padding(
-                padding: const EdgeInsets.all(15.0),
+                padding: const EdgeInsets.all(10),
                 child: Form(
-                    key: _formKey,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        TextFormField(
-                          decoration: InputDecoration(
-                              labelText: "Description",
-                              border: OutlineInputBorder(),
-                              hintText: "Enter photo Description"),
-                          controller: _descController,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return "Please enter photo's description";
-                            }
-                            return null;
-                          },
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextFormField(
+                        decoration: InputDecoration(
+                            labelText: "Description",
+                            border: OutlineInputBorder(),
+                            hintText: "Enter document Description"),
+                        controller: _descController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Enter the document description";
+                          }
+                          return null;
+                        },
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20.0),
+                        child: ListTile(
+                          tileColor: Colors.white12,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0)),
+                          title:
+                              Text("${selectedDate.toLocal()}".split(' ')[0]),
+                          trailing: Icon(Icons.calendar_today),
+                          onTap: () => _selectDate(context),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 20.0),
-                          child: ListTile(
-                            tileColor: Colors.white12,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5.0)),
-                            title:
-                                Text("${selectedDate.toLocal()}".split(' ')[0]),
-                            trailing: Icon(Icons.calendar_today),
-                            onTap: () => _selectDate(context),
-                          ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20.0),
+                        child: ListTile(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0)),
+                          contentPadding: EdgeInsets.all(15.0),
+                          tileColor: Colors.white12,
+                          title: Text(
+                              'Latitude: $_locationLat  \n\nLongtitue: $_locationLong'),
+                          trailing: Icon(Icons.gps_fixed),
+                          onTap: () => _getCurrentLocation(),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 20.0),
-                          child: ListTile(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5.0)),
-                            contentPadding: EdgeInsets.all(15.0),
-                            tileColor: Colors.white12,
-                            title: Text(
-                                'Latitude: $_locationLat  \n\nLongtitue: $_locationLong'),
-                            trailing: Icon(Icons.gps_fixed),
-                            onTap: () => _getCurrentLocation(),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        ElevatedButton(
-                          onPressed: () async {
-                            createPDF();
-                            savePDF('temp.pdf');
-                            // await _photos.add({
-                            //   'description': _descController.text,
-                            //   'collection': _folderController.text,
-                            //   'date_time': selectedDate,
-                            //   'latitude': _locationLat,
-                            //   'longtitude': _locationLong,
-                            //   'img_url': imageUrl.toString(),
-                            // });
-                            dialogMessage(
-                                context, 'Image uploaded Successfully!');
-                          },
-                          child: Text('Save Data'),
-                        ),
-                      ],
-                    )),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          createPDF();
+                          savePDF('temp.pdf');
+                          // await _photos.add({
+                          //   'description': _descController.text,
+                          //   'collection': _folderController.text,
+                          //   'date_time': selectedDate,
+                          //   'latitude': _locationLat,
+                          //   'longtitude': _locationLong,
+                          //   'img_url': imageUrl.toString(),
+                          // });
+                          _ShowUploadCompleteMessage(
+                              context, 'Document uploaded Successfully!');
+                        },
+                        child: Text('Upload Document'),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),
@@ -260,35 +266,39 @@ class _DocumentDetailsScreenState extends State<DocumentDetailsScreen> {
     );
   }
 
-  Future<dynamic> dialogMessage(BuildContext context, String message) {
+  Future<dynamic> _ShowUploadCompleteMessage(
+      BuildContext context, String message) {
     return showDialog(
-        context: context,
-        builder: (_) {
-          return AlertDialog(
-            title: Text(
-              message,
-              textAlign: TextAlign.center,
-            ),
-            content: Container(
-              height: 60,
-              child: Center(
-                child: Icon(
-                  Icons.check,
-                  size: 50.0,
-                ),
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          title: Text(
+            message,
+            textAlign: TextAlign.center,
+          ),
+          content: Container(
+            height: 60,
+            child: Center(
+              child: Icon(
+                Icons.check,
+                size: 100,
+                color: Colors.green,
               ),
             ),
-            alignment: Alignment.center,
-            titlePadding: EdgeInsets.all(25),
-            contentPadding: EdgeInsets.all(25),
-            actions: [
-              TextButton(
+          ),
+          alignment: Alignment.center,
+          actions: [
+            Center(
+              child: ElevatedButton(
                 onPressed: () => Navigator.popAndPushNamed(context, '/folder'),
                 child: Text('Ok'),
+                style: ElevatedButton.styleFrom(primary: Colors.green),
               ),
-            ],
-          );
-        });
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Widget document_picker_options() {
