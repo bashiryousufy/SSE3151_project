@@ -30,14 +30,21 @@ dependencies:
   flutter:
     sdk: flutter
   path_provider: ^2.0.8
+
+  #SSO and authentication dependencies:
+  firebase_auth: ^3.3.4
+  google_sign_in: ^5.2.1
+  flutter_facebook_auth: ^4.0.0
   local_auth: ^1.1.10
+
+  # Document handling dependencies:
   file_picker: ^4.4.0
   image_picker: ^0.8.4+9
   geolocator: ^8.0.1
   pdf: ^3.7.1
   flutter_pdfview: ^1.2.1
 
-  #firebase dependencies
+  #firebase dependencies:
   firebase_core: ^1.12.0
   firebase_storage: ^10.2.7
   cloud_firestore: ^3.1.4
