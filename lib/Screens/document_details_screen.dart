@@ -10,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:project/Controllers/firebase_controller.dart';
 
 class DocumentDetailsScreen extends StatefulWidget {
   const DocumentDetailsScreen({Key? key}) : super(key: key);
@@ -20,48 +21,23 @@ class DocumentDetailsScreen extends StatefulWidget {
 
 class _DocumentDetailsScreenState extends State<DocumentDetailsScreen> {
   File? image;
+  File? pickedPDF;
+  String? pathOfCreatedPDF;
   final pdf = pw.Document();
-  String? imageUrl;
   final _formKey = GlobalKey<FormState>();
+
+  FirebaseService _firebaseService = FirebaseService();
 
   //Textfield Controllers
   final _descController = TextEditingController();
-  final _folderController = TextEditingController();
+  final _filenameController = TextEditingController();
 
   //date and time
   DateTime selectedDate = DateTime.now();
 
-  //firebase collection reference
-  // final CollectionReference _photos =
-  //     FirebaseFirestore.instance.collection('photos');
-
-  // uploadImagetFirebase(String imagePath) async {
-  //   await FirebaseStorage.instance
-  //       .ref(imagePath)
-  //       .putFile(File(imagePath))
-  //       .then((taskSnapshot) async {
-  //     print("task done");
-
-  //     // download url when it is uploaded
-  //     if (taskSnapshot.state == TaskState.success) {
-  //       await FirebaseStorage.instance
-  //           .ref(imagePath)
-  //           .getDownloadURL()
-  //           .then((url) {
-  //         print("Here is the URL of Image $url");
-  //         setState(() {
-  //           imageUrl = url;
-  //         });
-  //       }).catchError((onError) {
-  //         print("Got Error $onError");
-  //       });
-  //     }
-  //   });
-  // }
-
   //location lat and long
-  String _locationLat = "";
-  String _locationLong = "";
+  String _locationLat = "0";
+  String _locationLong = "0";
 
   // To scan document from camera
   Future scanDocumentFromCamera(ImageSource source) async {
@@ -87,7 +63,9 @@ class _DocumentDetailsScreenState extends State<DocumentDetailsScreen> {
         .pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
 
     if (result != null) {
-      File file = File(result.files.single.path!);
+      setState(() {
+        pickedPDF = File(result.files.single.path!);
+      });
     }
   }
 
@@ -132,15 +110,20 @@ class _DocumentDetailsScreenState extends State<DocumentDetailsScreen> {
   savePDF(String filename) async {
     try {
       final dir = await getApplicationDocumentsDirectory();
-      final file = File('${dir.path}/$filename');
+      final file = File('${dir.path}/$filename.pdf');
       await file.writeAsBytes(await pdf.save());
-    } catch (e) {}
+      print('pdf path: ${file.path}');
+      setState(() {
+        pathOfCreatedPDF = file.path.toString();
+      });
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   @override
   void dispose() {
     _descController.dispose();
-    _folderController.dispose();
     super.dispose();
   }
 
@@ -178,6 +161,7 @@ class _DocumentDetailsScreenState extends State<DocumentDetailsScreen> {
                   TextButton(
                     onPressed: () {
                       showModalBottomSheet(
+                          isScrollControlled: true,
                           context: context,
                           builder: (BuildContext context) {
                             return document_picker_options();
@@ -197,6 +181,22 @@ class _DocumentDetailsScreenState extends State<DocumentDetailsScreen> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      TextFormField(
+                        decoration: InputDecoration(
+                            labelText: "File Name",
+                            border: OutlineInputBorder(),
+                            hintText: "Enter document Description"),
+                        controller: _filenameController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Enter the document description";
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(
+                        height: 20.0,
+                      ),
                       TextFormField(
                         decoration: InputDecoration(
                             labelText: "Description",
@@ -241,15 +241,21 @@ class _DocumentDetailsScreenState extends State<DocumentDetailsScreen> {
                       ElevatedButton(
                         onPressed: () async {
                           createPDF();
-                          savePDF('temp.pdf');
-                          // await _photos.add({
-                          //   'description': _descController.text,
-                          //   'collection': _folderController.text,
-                          //   'date_time': selectedDate,
-                          //   'latitude': _locationLat,
-                          //   'longtitude': _locationLong,
-                          //   'img_url': imageUrl.toString(),
-                          // });
+                          await savePDF(_filenameController.text);
+
+                          String imgurl =
+                              await _firebaseService.uploadImagetFirebase(
+                                  pathOfCreatedPDF!, _filenameController.text);
+                          await _firebaseService
+                              .uploadDocumentDetailsToFirebase({
+                            'desc': _descController.text,
+                            'filename': _filenameController.text,
+                            'date': selectedDate,
+                            'lat': _locationLat,
+                            'long': _locationLong,
+                            'imgurl': imgurl.toString()
+                          });
+
                           _ShowUploadCompleteMessage(
                               context, 'Document uploaded Successfully!');
                         },

@@ -329,6 +329,7 @@ class _FolderScreenState extends State<FolderScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showModalBottomSheet(
+              isScrollControlled: true,
               context: context,
               builder: (context) {
                 return DocumentDetailsScreen();
