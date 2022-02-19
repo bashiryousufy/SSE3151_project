@@ -15,7 +15,7 @@ class AuthenticateScreen extends StatelessWidget {
             stickyAuth: true,
             localizedReason: "Authenticate to get access to your documents");
 
-        Navigator.popAndPushNamed(context, '/folder');
+        Navigator.popAndPushNamed(context, '/home');
       }
     } catch (e) {
       print(e.toString());

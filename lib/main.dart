@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:project/Screens/auth_screen.dart';
 import 'package:project/Screens/folders_screen.dart';
+import 'package:project/Screens/home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,6 +27,7 @@ class _MyAppState extends State<MyApp> {
       ),
       routes: {
         '/': (context) => AuthenticateScreen(),
+        '/home': (context) => HomeScreen(),
         '/folder': (context) => FolderScreen(),
       },
     );

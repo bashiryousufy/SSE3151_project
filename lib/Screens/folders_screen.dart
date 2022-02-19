@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:project/Screens/inner_folder_screen.dart';
 import 'package:project/Screens/pdf_view_screen.dart';
@@ -190,33 +191,6 @@ class _FolderScreenState extends State<FolderScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.person),
-          color: Colors.black,
-          onPressed: () {
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const SignInScreen(),
-                ));
-          },
-        ),
-        title: Text("My Documents"),
-        centerTitle: true,
-        actions: <Widget>[
-          IconButton(
-            onPressed: () => _showAddFolderDialog(),
-            icon: Icon(Icons.create_new_folder_rounded),
-            color: Colors.black,
-          ),
-        ],
-        titleTextStyle: TextStyle(
-          color: Colors.black,
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
       body: GridView.builder(
         padding: EdgeInsets.symmetric(
           horizontal: 20,
@@ -311,7 +285,7 @@ class _FolderScreenState extends State<FolderScreen> {
                     },
                     child: Icon(
                       Icons.delete,
-                      color: Colors.grey,
+                      color: Colors.red,
                     ),
                   ),
                 ),
@@ -326,7 +300,7 @@ class _FolderScreenState extends State<FolderScreen> {
                     },
                     child: Icon(
                       Icons.share,
-                      color: Colors.grey,
+                      color: Colors.blue,
                     ),
                   ),
                 ),
@@ -336,21 +310,26 @@ class _FolderScreenState extends State<FolderScreen> {
         },
         itemCount: _folders.length,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showModalBottomSheet(
-              isScrollControlled: true,
-              context: context,
-              builder: (context) {
-                return DocumentDetailsScreen(
-                  folderPath: "",
-                );
-              });
-        },
-        child: Icon(
-          Icons.file_present,
-          color: Colors.black,
-        ),
+      floatingActionButton: SpeedDial(
+        animatedIcon: AnimatedIcons.menu_home,
+        children: [
+          SpeedDialChild(
+              child: Icon(Icons.camera),
+              label: 'Create Document',
+              onTap: () => showModalBottomSheet(
+                  isScrollControlled: true,
+                  context: context,
+                  builder: (context) {
+                    return DocumentDetailsScreen(
+                      folderPath: "",
+                    );
+                  })),
+          SpeedDialChild(
+            label: 'Create Folder',
+            child: Icon(Icons.create_new_folder_rounded),
+            onTap: () => _showAddFolderDialog(),
+          ),
+        ],
       ),
     );
   }
