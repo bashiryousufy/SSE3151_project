@@ -4,7 +4,7 @@ import 'package:project/Screens/auth_screen.dart';
 import 'package:project/Screens/cloud_docs_screen.dart';
 import 'package:project/Screens/folders_screen.dart';
 import 'package:project/Screens/home_screen.dart';
-import 'package:project/Screens/signin.dart';
+import 'package:project/Screens/signin_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

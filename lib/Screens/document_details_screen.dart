@@ -18,6 +18,7 @@ import 'package:simpleprogressdialog/simpleprogressdialog.dart';
 class DocumentDetailsScreen extends StatefulWidget {
   final String folderPath;
   String? authUserEmail;
+
   DocumentDetailsScreen(
       {Key? key, required this.folderPath, this.authUserEmail})
       : super(key: key);

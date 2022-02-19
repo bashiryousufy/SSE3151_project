@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:project/Screens/cloud_docs_screen.dart';
 import 'package:project/Screens/folders_screen.dart';
-import 'package:project/Screens/signin.dart';
+import 'package:project/Screens/signin_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   String? authUserEmail;
+
   HomeScreen({Key? key, this.authUserEmail}) : super(key: key);
 
   @override
@@ -14,6 +15,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   late TabController tabController;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -30,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen>
           child: Container(
             height: 50.0,
             child: new TabBar(
-              indicatorColor: Colors.red,
+              indicatorColor: Colors.black,
               unselectedLabelColor: Colors.black38,
               labelColor: Colors.black,
               controller: tabController,

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:project/Screens/document_details_screen.dart';
+import 'package:share_plus/share_plus.dart';
 
 class InnerFolder extends StatefulWidget {
   InnerFolder({required this.filespath});
@@ -44,7 +45,6 @@ class InnerFolderState extends State<InnerFolder> {
   callFolderCreationMethod(String folderInAppDocDir) async {
     // ignore: unused_local_variable
     String actualFileName = await createFolderInAppDocDir(folderInAppDocDir);
-    print(actualFileName);
     setState(() {});
   }
 
@@ -72,7 +72,6 @@ class InnerFolderState extends State<InnerFolder> {
                 onChanged: (val) {
                   setState(() {
                     nameOfFolder = folderController.text;
-                    print(nameOfFolder);
                   });
                 },
               );
@@ -181,7 +180,6 @@ class InnerFolderState extends State<InnerFolder> {
     setState(() {
       _folders = myDir.listSync(recursive: true, followLinks: false);
     });
-    print(_folders);
   }
 
   @override
@@ -231,9 +229,8 @@ class InnerFolderState extends State<InnerFolder> {
                           builder: (ctx, snapshot) {
                             if (snapshot.hasData) {
                               FileStat? f = snapshot.data as FileStat?;
-                              print("file.stat() ${f!.type}");
-                              ;
-                              if (f.type.toString().contains("file")) {
+
+                              if (f!.type.toString().contains("file")) {
                                 return Icon(
                                   Icons.file_copy_outlined,
                                   size: 100,
@@ -252,9 +249,7 @@ class InnerFolderState extends State<InnerFolder> {
                                         k < _folders_list.length;
                                         k++) {
                                       var config = File(_folders_list[k].path);
-                                      print("IsFile ${config is File}");
                                     }
-                                    print(_folders_list);
                                   },
                                   child: Icon(
                                     Icons.folder,
@@ -285,10 +280,25 @@ class InnerFolderState extends State<InnerFolder> {
                     },
                     child: Icon(
                       Icons.delete,
-                      color: Colors.grey,
+                      color: Colors.red,
                     ),
                   ),
-                )
+                ),
+                Positioned(
+                  top: 60,
+                  right: 10,
+                  child: GestureDetector(
+                    onTap: () async {
+                      await Share.shareFiles(
+                        [_folders[index].path],
+                      );
+                    },
+                    child: Icon(
+                      Icons.share,
+                      color: Colors.blue,
+                    ),
+                  ),
+                ),
               ],
             ),
           );

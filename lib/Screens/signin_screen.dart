@@ -50,7 +50,6 @@ class _SignInScreenState extends State<SignInScreen> {
 
       await FirebaseAuth.instance.signInWithCredential(credential);
       String? authUserEmail = FirebaseAuth.instance.currentUser!.email;
-      print(authUserEmail);
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(

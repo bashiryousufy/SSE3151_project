@@ -7,6 +7,7 @@ import 'package:share_plus/share_plus.dart';
 
 class CloudDocsScreen extends StatefulWidget {
   String? authUserEmail;
+
   CloudDocsScreen({Key? key, this.authUserEmail}) : super(key: key);
 
   @override
@@ -19,9 +20,21 @@ class _CloudDocsScreenState extends State<CloudDocsScreen> {
     return widget.authUserEmail == null
         ? Container(
             child: Center(
-              child: ElevatedButton(
-                child: Text('Login'),
-                onPressed: () => Navigator.pushNamed(context, '/login'),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Looks like you are not signed in!",
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  ElevatedButton(
+                    child: Text('Sign In'),
+                    onPressed: () => Navigator.pushNamed(context, '/login'),
+                  ),
+                ],
               ),
             ),
           )
@@ -204,10 +217,10 @@ class _CloudDocsScreenState extends State<CloudDocsScreen> {
                   );
                 }),
             floatingActionButton: SpeedDial(
-              animatedIcon: AnimatedIcons.menu_home,
+              animatedIcon: AnimatedIcons.menu_close,
               children: [
                 SpeedDialChild(
-                    child: Icon(Icons.camera),
+                    child: Icon(Icons.file_present),
                     label: 'Create Cloud Doc',
                     onTap: () => showModalBottomSheet(
                         isScrollControlled: true,

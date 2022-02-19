@@ -7,7 +7,7 @@ import 'package:project/Screens/inner_folder_screen.dart';
 import 'package:project/Screens/pdf_view_screen.dart';
 import 'package:project/Screens/document_details_screen.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:project/Screens/signin.dart';
+import 'package:project/Screens/signin_screen.dart';
 
 class FolderScreen extends StatefulWidget {
   const FolderScreen({Key? key}) : super(key: key);
@@ -43,7 +43,6 @@ class _FolderScreenState extends State<FolderScreen> {
   callFolderCreationMethod(String folderInAppDocDir) async {
     // ignore: unused_local_variable
     String actualFileName = await createFolderInAppDocDir(folderInAppDocDir);
-    print(actualFileName);
     setState(() {});
   }
 
@@ -73,7 +72,6 @@ class _FolderScreenState extends State<FolderScreen> {
                 onChanged: (val) {
                   setState(() {
                     nameOfFolder = folderController.text;
-                    print(nameOfFolder);
                   });
                 },
               );
@@ -177,7 +175,6 @@ class _FolderScreenState extends State<FolderScreen> {
     setState(() {
       _folders = myDir.listSync(recursive: true, followLinks: false);
     });
-    print(_folders);
   }
 
   @override
@@ -217,9 +214,8 @@ class _FolderScreenState extends State<FolderScreen> {
                           builder: (ctx, snapshot) {
                             if (snapshot.hasData) {
                               FileStat? f = snapshot.data as FileStat?;
-                              print("file.stat() ${f!.type}");
 
-                              if (f.type.toString().contains("file")) {
+                              if (f!.type.toString().contains("file")) {
                                 return InkWell(
                                   onTap: () {
                                     File file = File(_folders[index].path);
@@ -311,10 +307,10 @@ class _FolderScreenState extends State<FolderScreen> {
         itemCount: _folders.length,
       ),
       floatingActionButton: SpeedDial(
-        animatedIcon: AnimatedIcons.menu_home,
+        animatedIcon: AnimatedIcons.menu_close,
         children: [
           SpeedDialChild(
-              child: Icon(Icons.camera),
+              child: Icon(Icons.file_present),
               label: 'Create Document',
               onTap: () => showModalBottomSheet(
                   isScrollControlled: true,
