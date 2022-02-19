@@ -84,8 +84,9 @@ class _SignInScreenState extends State<SignInScreen> {
               },
               child: Image.asset(
                 "assets/facebook.png",
-                width: 100,
+                width: 225,
                 height: 100,
+                fit: BoxFit.cover,
               ),
             ),
             SizedBox(
