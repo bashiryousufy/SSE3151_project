@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:project/Screens/document_details_screen.dart';
 import 'package:share_plus/share_plus.dart';
@@ -305,21 +306,26 @@ class InnerFolderState extends State<InnerFolder> {
         },
         itemCount: _folders.length,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showModalBottomSheet(
-              isScrollControlled: true,
-              context: context,
-              builder: (context) {
-                return DocumentDetailsScreen(
-                  folderPath: widget.filespath,
-                );
-              });
-        },
-        child: Icon(
-          Icons.file_present,
-          color: Colors.black,
-        ),
+      floatingActionButton: SpeedDial(
+        animatedIcon: AnimatedIcons.menu_close,
+        children: [
+          SpeedDialChild(
+              child: Icon(Icons.file_present),
+              label: 'Create Document',
+              onTap: () => showModalBottomSheet(
+                  isScrollControlled: true,
+                  context: context,
+                  builder: (context) {
+                    return DocumentDetailsScreen(
+                      folderPath: "",
+                    );
+                  })),
+          SpeedDialChild(
+            label: 'Create Folder',
+            child: Icon(Icons.create_new_folder_rounded),
+            onTap: () => _showAddFolderDialog(),
+          ),
+        ],
       ),
     );
   }
