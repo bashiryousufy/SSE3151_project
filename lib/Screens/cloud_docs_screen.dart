@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
 class CloudDocsScreen extends StatelessWidget {
   const CloudDocsScreen({Key? key}) : super(key: key);
@@ -79,6 +80,60 @@ class CloudDocsScreen extends StatelessWidget {
                         child: GestureDetector(
                           onTap: () {
                             //TODO: Delete from cloud
+                            showDialog<void>(
+                              context: context,
+                              barrierDismissible:
+                                  false, // user must tap button!
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text(
+                                    'Are you sure to delete this folder?',
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  actions: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        TextButton(
+                                          style: TextButton.styleFrom(
+                                              primary: Colors.white,
+                                              backgroundColor:
+                                                  Colors.lightGreen),
+                                          child: Text('Yes'),
+                                          onPressed: () async {
+                                            final collection = FirebaseFirestore
+                                                .instance
+                                                .collection('docs');
+                                            await collection
+                                                .doc(snapshot.data.docs[index]
+                                                    .id) // <-- Doc ID to be deleted.
+                                                .delete() // <-- Delete
+                                                .then((_) => print('Deleted'))
+                                                .catchError((error) => print(
+                                                    'Delete failed: $error'));
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                        SizedBox(
+                                          width: 15,
+                                        ),
+                                        TextButton(
+                                          style: TextButton.styleFrom(
+                                              primary: Colors.white,
+                                              backgroundColor:
+                                                  Colors.redAccent),
+                                          child: Text('Cancel'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
                           },
                           child: Icon(
                             Icons.delete,
@@ -91,7 +146,9 @@ class CloudDocsScreen extends StatelessWidget {
                         right: 5,
                         child: GestureDetector(
                           onTap: () async {
-                            //TODO: Share the document URL
+                            await Share.share(
+                              snapshot.data.docs[index]['docUrl'],
+                            );
                           },
                           child: Icon(
                             Icons.share,

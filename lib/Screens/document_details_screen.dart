@@ -275,7 +275,7 @@ class _DocumentDetailsScreenState extends State<DocumentDetailsScreen> {
                             'date': selectedDate,
                             'lat': _locationLat,
                             'long': _locationLong,
-                            'imgurl': imgurl.toString()
+                            'docUrl': imgurl.toString()
                           });
                           dialog.dismiss();
 
