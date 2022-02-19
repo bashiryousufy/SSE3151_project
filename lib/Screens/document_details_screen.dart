@@ -17,7 +17,9 @@ import 'package:simpleprogressdialog/simpleprogressdialog.dart';
 
 class DocumentDetailsScreen extends StatefulWidget {
   final String folderPath;
-  const DocumentDetailsScreen({Key? key, required this.folderPath})
+  String? authUserEmail;
+  DocumentDetailsScreen(
+      {Key? key, required this.folderPath, this.authUserEmail})
       : super(key: key);
 
   @override
@@ -262,22 +264,27 @@ class _DocumentDetailsScreenState extends State<DocumentDetailsScreen> {
                         onPressed: () async {
                           createPDF();
                           await savePDF(_filenameController.text);
-                          dialog.showMaterial(
-                              layout: MaterialProgressDialogLayout
-                                  .overlayCircularProgressIndicator);
-                          String? imgurl =
-                              await _firebaseService.uploadImagetFirebase(
-                                  pathOfCreatedPDF!, _filenameController.text);
-                          await _firebaseService
-                              .uploadDocumentDetailsToFirebase({
-                            'desc': _descController.text,
-                            'filename': _filenameController.text,
-                            'date': selectedDate,
-                            'lat': _locationLat,
-                            'long': _locationLong,
-                            'docUrl': imgurl.toString()
-                          });
-                          dialog.dismiss();
+
+                          if (widget.authUserEmail != null) {
+                            dialog.showMaterial(
+                                layout: MaterialProgressDialogLayout
+                                    .overlayCircularProgressIndicator);
+                            String? imgurl =
+                                await _firebaseService.uploadImagetFirebase(
+                                    pathOfCreatedPDF!,
+                                    _filenameController.text);
+                            await _firebaseService
+                                .uploadDocumentDetailsToFirebase({
+                              'desc': _descController.text,
+                              'filename': _filenameController.text,
+                              'date': selectedDate,
+                              'lat': _locationLat,
+                              'long': _locationLong,
+                              'docUrl': imgurl.toString(),
+                              'userEmail': widget.authUserEmail
+                            });
+                            dialog.dismiss();
+                          }
 
                           _ShowUploadCompleteMessage(
                               context, 'Document uploaded Successfully!');
@@ -319,7 +326,10 @@ class _DocumentDetailsScreenState extends State<DocumentDetailsScreen> {
           actions: [
             Center(
               child: ElevatedButton(
-                onPressed: () => Navigator.popAndPushNamed(context, '/folder'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                },
                 child: Text('Ok'),
                 style: ElevatedButton.styleFrom(primary: Colors.green),
               ),

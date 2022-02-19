@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -16,14 +17,18 @@ class _SignInScreenState extends State<SignInScreen> {
   void _signInWithFacebook(BuildContext context) async {
     try {
       final facebookLoginResult = await FacebookAuth.instance.login();
-      final userData = await FacebookAuth.instance.getUserData();
+      final userData = await FacebookAuth.instance.getUserData(fields: 'email');
 
       final facebookAuthCredential = FacebookAuthProvider.credential(
           facebookLoginResult.accessToken!.token);
       await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
 
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => HomeScreen()));
+          context,
+          MaterialPageRoute(
+              builder: (context) => HomeScreen(
+                    authUserEmail: userData['email'],
+                  )));
     } catch (e) {
       print(e);
     }
@@ -38,14 +43,20 @@ class _SignInScreenState extends State<SignInScreen> {
       }
       final googleSignInAuthentication =
           await googleSignInAccount.authentication;
+
       final credential = GoogleAuthProvider.credential(
           accessToken: googleSignInAuthentication.accessToken,
           idToken: googleSignInAuthentication.idToken);
 
       await FirebaseAuth.instance.signInWithCredential(credential);
-
+      String? authUserEmail = FirebaseAuth.instance.currentUser!.email;
+      print(authUserEmail);
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => HomeScreen()));
+          context,
+          MaterialPageRoute(
+              builder: (context) => HomeScreen(
+                    authUserEmail: authUserEmail,
+                  )));
     } catch (e) {
       print(e);
     }

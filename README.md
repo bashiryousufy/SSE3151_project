@@ -21,4 +21,4 @@ Biometric authentication shall be enabled for all users. Use Google Firebase or 
 [X] Make Folders for each document Category <br>
 [X] Upload to cloud <br>
 [X] Share Document through URL <br>
-[] Retrieve Documents for specific user
+[X] Retrieve Documents for specific user

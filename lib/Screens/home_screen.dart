@@ -4,7 +4,8 @@ import 'package:project/Screens/folders_screen.dart';
 import 'package:project/Screens/signin.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({Key? key}) : super(key: key);
+  String? authUserEmail;
+  HomeScreen({Key? key, this.authUserEmail}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -48,11 +49,7 @@ class _HomeScreenState extends State<HomeScreen>
           icon: Icon(Icons.person),
           color: Colors.black,
           onPressed: () {
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const SignInScreen(),
-                ));
+            Navigator.pushNamed(context, '/login');
           },
         ),
         title: Text("My Documents"),
@@ -66,7 +63,9 @@ class _HomeScreenState extends State<HomeScreen>
       body: TabBarView(
         children: [
           FolderScreen(),
-          CloudDocsScreen(),
+          CloudDocsScreen(
+            authUserEmail: widget.authUserEmail,
+          ),
         ],
         controller: tabController,
       ),

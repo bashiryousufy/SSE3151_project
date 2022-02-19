@@ -37,6 +37,7 @@ dependencies:
   flutter_facebook_auth: ^4.0.0
   local_auth: ^1.1.10
 
+
   # Document handling dependencies:
   file_picker: ^4.4.0
   image_picker: ^0.8.4+9
