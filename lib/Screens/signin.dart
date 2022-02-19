@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:project/Screens/folders_screen.dart';
+import 'package:project/Screens/home_screen.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({Key? key}) : super(key: key);
@@ -22,7 +23,7 @@ class _SignInScreenState extends State<SignInScreen> {
       await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
 
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => FolderScreen()));
+          context, MaterialPageRoute(builder: (context) => HomeScreen()));
     } catch (e) {
       print(e);
     }
@@ -44,7 +45,7 @@ class _SignInScreenState extends State<SignInScreen> {
       await FirebaseAuth.instance.signInWithCredential(credential);
 
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => FolderScreen()));
+          context, MaterialPageRoute(builder: (context) => HomeScreen()));
     } catch (e) {
       print(e);
     }
@@ -87,7 +88,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 primary: Colors.green,
               ),
               onPressed: () async {
-                _signInWithFacebook(context);
+                _signInWithGoogle(context);
               },
               child: Image.asset(
                 "assets/google.png",

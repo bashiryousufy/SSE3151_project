@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Document Auth Project</string>
+    <string name="facebook_app_id">1009110363354409</string>
+    <string name="fb_login_protocol_scheme">fb1365719610250300</string>
+    <string name="facebook_client_token">bc0f085838dd55d1c672e48e3ce8300e</string>
+</resources>
