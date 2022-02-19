@@ -11,7 +11,7 @@ Biometric authentication shall be enabled for all users. Use Google Firebase or 
 
 ## TODO List
 ### Sajjad 
-[] Add SSO Facebook and Google Auth (UPM Email Auth) <br>
+[X] Add SSO Facebook and Google Auth (UPM Email Auth) <br>
 [X] Authentication with fingerprint and fallback pin <br>
 [X] Scan Document From Camera <br>
 [X] Upload Document From Device (Library) <br>
@@ -20,4 +20,5 @@ Biometric authentication shall be enabled for all users. Use Google Firebase or 
 [X] Add the extra remarks (Description, Location (Latitude, Longtitude)) <br>
 [X] Make Folders for each document Category <br>
 [X] Upload to cloud <br>
-[] Share Document through URL <br>
+[X] Share Document through URL <br>
+[] Retrieve Documents for specific user
