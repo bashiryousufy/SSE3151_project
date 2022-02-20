@@ -310,16 +310,19 @@ class InnerFolderState extends State<InnerFolder> {
         animatedIcon: AnimatedIcons.menu_close,
         children: [
           SpeedDialChild(
-              child: Icon(Icons.file_present),
-              label: 'Create Document',
-              onTap: () => showModalBottomSheet(
+            child: Icon(Icons.file_present),
+            label: 'Create Document',
+            onTap: () {
+              showModalBottomSheet(
                   isScrollControlled: true,
                   context: context,
                   builder: (context) {
                     return DocumentDetailsScreen(
-                      folderPath: "",
+                      folderPath: widget.filespath,
                     );
-                  })),
+                  });
+            },
+          ),
           SpeedDialChild(
             label: 'Create Folder',
             child: Icon(Icons.create_new_folder_rounded),
